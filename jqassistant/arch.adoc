@@ -1,0 +1,23 @@
+[[arch:Default]]
+[role=group,includesConstraints="arch:CountMethods"]
+== Architektur
+
+Beschreibung der Tests
+
+=== Constraints
+
+[[arch:CountMethods]]
+[source,cypher,role=constraint]
+.Es dürfen maximal 9 Methoden in einer Klasse definiert werden.
+----
+MATCH
+  (t:Type)-[:DECLARES]->(m:Method)
+WITH
+	t, count(t) as counter
+WHERE
+	counter > 9
+RETURN
+  t.fqn AS Type, counter AS DeclaredMethods
+ORDER BY
+  DeclaredMethods DESC
+----

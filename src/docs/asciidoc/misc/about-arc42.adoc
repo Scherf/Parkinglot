@@ -1,0 +1,14 @@
+:homepage: http://wiki.system.local
+
+:keywords: software-architecture, documentation, template, arc42
+
+:numbered!:
+
+**Parlinglot System**
+
+[role="lead"]
+Das Parkinglot ist eine Web-basierte Anwendung zur Verwaltung von Parkplätzen in einem Parkhaus mit
+der Idee freie Parkplätze kurzfristig und für eine kurze Zeit an Personen zu vermieten.
+
+Erstellt von US
+

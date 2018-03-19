@@ -1,0 +1,28 @@
+[[test:Default]]
+[role=group,includesConstraints="test:TestMethodWithoutAssertion,junit4:IgnoreWithoutMessage"]
+== Tests
+
+The following test rules apply:
+
+- <<test:TestMethodWithoutAssertion>>
+- All @Ignore annotations must provide a message
+
+The following reports are created:
+
+- <<test:TestAffectedByLastCommit>>
+
+=== Constraints
+
+[[test:TestMethodWithoutAssertion]]
+[source,cypher,role=constraint]
+.All test methods must perform at least one assertion (within a call hierarchy of max. 3 steps).
+----
+MATCH
+  (t:Type)-[:DECLARES]->(m:Method)
+RETURN
+  t.fqn AS Type, count(t) AS DeclaredMethods
+ORDER BY
+  DeclaredMethods DESC
+LIMIT 20
+----
+

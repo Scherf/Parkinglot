@@ -1,0 +1,57 @@
+:toc: left
+:numbered:              // Number all section headers
+:sectnumlevels: 5       // Number up to section level 5
+:toclevels: 2           // Table of content should have only two levels
+
+= Rules of the project
+
+Detailed description here. TODO
+
+== Summary
+
+include::jQA:Summary[]
+
+== Rules
+
+[[default]]
+[role=group,includesGroups="test:Default,arch:Default"]
+- <<maven:Default>>
+- <<test:Default>>
+- <<arch:Default>>
+
+include::maven.adoc[]
+include::arch.adoc[]
+include::test.adoc[]
+
+
+[[rules:Concept]]
+[source,cypher,role=constraint,rowCountMax=20,aggregationColumn=Value]
+.Validierung des Source-Codes
+----
+MATCH (c:Class) RETURN c as Value
+----
+
+[[test:Constraint]]
+[source,cypher,role=concept,requiresConcepts="test:ImportedConcept"]
+.Constraint Description
+----
+MATCH (n) RETURN n as Value
+----
+
+
+[[rules:CountMehtods]]
+[source,cypher,role=constraint,rowCountMax=20,aggregationColumn=Value]
+.Klassen mit den meisten Methoden
+----
+MATCH
+  (class:Class)-[:DECLARES]->(method:Method)
+RETURN
+  class.fqn, count(method) as Methods
+ORDER BY
+  Methods DESC
+LIMIT 20
+----
+
+== Imported Rules
+
+include::jQA:ImportedRules[]

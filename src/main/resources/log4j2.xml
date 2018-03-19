@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ | http://logging.apache.org/log4j/2.x/manual/configuration.html
+ |
+ | @author u094915
+ | $LastChangedBy: u000349 $
+ | $LastChangedDate: 2014-11-28 10:40:12 +0100 (Fri, 28 Nov 2014) $
+ | $Rev: 9814 $
+ +-->
+<Configuration name="common" monitorInterval="30" status="INFO">
+
+  <!--
+   | http://logging.apache.org/log4j/2.x/manual/configuration.html#PropertySubstitution
+   +-->
+  <Properties>
+    <!--
+     | http://logging.apache.org/log4j/2.x/manual/lookups.html#JndiLookup 
+     +-->
+    <Property name="logDirectory">target</Property>
+    <Property name="projectName">parkinglot</Property>
+    <property name="applicationLogLevel">INFO</property>
+    <property name="usedAppender">console</property>
+    <Property name="pattern">%X{REMOTE_HOSTNAME} | %X{APPLICATION_NAME} | R: %X{REQUEST_ID} | S: %X{SESSION_ID} | C:
+      %X{CORRELATION_ID} | %X{HOSTNAME} | U: %X{USER_NAME} : %d{ISO8601} [%-5p] %30c{1} %m%n
+    </Property>
+  </Properties>
+
+  <!--
+   | http://logging.apache.org/log4j/2.x/manual/configuration.html#Appenders
+   |
+   | Appenders are responsible for delivering LogEvents to their destination.
+   | Appenders always have a name so that they can be referenced from Loggers. 
+   +-->
+  <Appenders>
+    <!--
+     | http://logging.apache.org/log4j/2.x/manual/appenders.html#ConsoleAppender 
+     +-->
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout
+              pattern="${pattern}"/>
+    </Console>
+
+    <!--
+     | http://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender
+     | http://logging.apache.org/log4j/2.x/manual/lookups.html#WebLookup
+     | " If the file pattern ends with ".gz", ".zip", ".bz2", ".deflate", ".pack200", or ".xz"
+     | the resulting archive will be compressed using the compression scheme that matches the suffix
+     +-->
+    <RollingFile name="logfile" fileName="${logDirectory}/${projectName}.log"
+                 filePattern="${logDirectory}/${projectName}-%d{yyyy-MM-dd}-%i.log.gz">
+      <!--
+       | http://logging.apache.org/log4j/2.x/manual/appenders.html#TriggeringPolicies
+       | http://logging.apache.org/log4j/2.x/manual/appenders.html#RolloverStrategies
+       |
+       | The triggering policy determines if a rollover should be performed while 
+       | the RolloverStrategy defines how the rollover should be done. If no RolloverStrategy
+       | is configured, RollingFileAppender will use the DefaultRolloverStrategy. 
+       +-->
+      <Policies>
+        <OnStartupTriggeringPolicy/>
+        <TimeBasedTriggeringPolicy interval="1"
+                                   modulate="true"/>
+        <SizeBasedTriggeringPolicy size="20 MB"/>
+      </Policies>
+
+      <!-- Der Default-Wert für das Attribut max in der DefaultRolloverStrategy ist 7. Es werden nur
+          sieben Files aufbewahrt -->
+      <DefaultRolloverStrategy max="500"/>
+      <!--
+       | http://logging.apache.org/log4j/2.x/manual/layouts.html
+       | http://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout
+       +-->
+      <PatternLayout pattern="${pattern}"/>
+    </RollingFile>
+  </Appenders>
+  <!--
+    | http://logging.apache.org/log4j/2.x/manual/configuration.html#Loggers
+    | http://logging.apache.org/log4j/2.x/manual/architecture.html
+    |
+    | Every configuration must have a root logger. If one is not configured the
+    | default root LoggerConfig, which has a level of ERROR and has a Console appender
+    | attached, will be used.
+    +-->
+  <Loggers>
+    <Root level="WARN">
+      <AppenderRef ref="${usedAppender}"/>
+    </Root>
+
+    <!--
+     | Loggen der Application
+     +-->
+    <Logger name="de.signaliduna" level="${applicationLogLevel}"/>
+  </Loggers>
+
+</Configuration>  
