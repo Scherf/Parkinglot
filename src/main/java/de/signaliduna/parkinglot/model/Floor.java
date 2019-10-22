@@ -1,41 +1,40 @@
 package de.signaliduna.parkinglot.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Jeder {@link CarPark} besteht aus mehreren {@link Floor}s, welche {@link ParkingLot}s enthalten.
  * @author U094915
  */
-public class Floor extends Entity {
+@Entity
+@Getter
+@Setter
+@ToString
+public class Floor implements Serializable {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
   private int level;
   private int capacity;
+
+  @OneToMany
   private List<ParkingLot> parkingLots;
-
-  public int getLevel() {
-    return level;
-  }
-
-  public int getCapacity() {
-    return capacity;
-  }
-
-  public List<ParkingLot> getParkingLots() {
-    return parkingLots;
-  }
 
   public List<ParkingLot> addParkingLot(ParkingLot parkingLot) {
     parkingLots.add(parkingLot);
     return parkingLots;
-  }
-
-  @Override
-  public String toString() {
-    return "Floor{" +
-            "level=" + level +
-            ", capacity=" + capacity +
-            ", parkingLots=" + parkingLots +
-            '}';
   }
 
   public static FloorBuilder builder() {

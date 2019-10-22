@@ -1,30 +1,30 @@
 package de.signaliduna.parkinglot.model.comparison;
 
-import org.apache.commons.lang3.SerializationUtils;
-import org.javers.core.diff.Diff;
-import org.junit.Before;
-import org.junit.Test;
-
 import de.signaliduna.parkinglot.model.ParkingLot;
 import de.signaliduna.parkinglot.model.Person;
 import de.signaliduna.parkinglot.model.Rental;
+import org.apache.commons.lang3.SerializationUtils;
+import org.javers.core.diff.Diff;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author U094915
  */
-public class ParkingLotAuditTest {
+class ParkingLotAuditTest {
 
   private ParkingLotAudit parkingLotAudit;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     parkingLotAudit = new ParkingLotAudit();
   }
 
   @Test
-  public void compare() {
+  void compare() {
 
     ParkingLot parkingLotSource = ParkingLot
             .builder()

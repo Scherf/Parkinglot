@@ -1,49 +1,54 @@
 package de.signaliduna.parkinglot.service;
 
-import javax.inject.Inject;
-
-import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import de.signaliduna.parkinglot.model.CarPark;
 import de.signaliduna.parkinglot.model.ParkingLot;
 import de.signaliduna.parkinglot.model.Person;
 import de.signaliduna.parkinglot.model.Rental;
 import de.signaliduna.parkinglot.model.exception.BusinessException;
 import de.signaliduna.parkinglot.model.exception.ErrorCode;
+import io.quarkus.test.junit.QuarkusTest;
+import javax.inject.Inject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author U094915
  */
-@RunWith(CdiTestRunner.class)
-public class CarParkServiceTest {
+@QuarkusTest
+class CarParkServiceTest {
 
   @Inject
   private CarParkService carParkService;
   private Person owner;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     owner =  Person.builder().withName("Meister").build();
   }
 
+  @AfterEach
+  void cleanUp() {
+    carParkService.removeCarpark("JUnit_CarPark");
+  }
+
   @Test
-  public void createParkingLot() {
-    CarPark carpark = carParkService.createCarpark("JUnit", owner, 100);
+  void createParkingLot() {
+    CarPark carpark = carParkService.createCarpark("JUnit_CP", owner, 100);
 
     assertThat(carpark.getOwner().getName(), is("Meister"));
   }
 
   @Test
-  public void rent_parking_lot() {
+  void rent_parking_lot() {
     Person owner = Person.builder().withName("Meister").build();
-    CarPark carpark = carParkService.createCarpark("JUnit", owner, 100);
+    CarPark carpark = carParkService.createCarpark("JUnit_Rent_Lot", owner, 100);
 
     Person rentee = Person.builder().withName("Mieter").build();
 
@@ -53,16 +58,16 @@ public class CarParkServiceTest {
  }
 
   @Test
-  public void getNextFreeParkingLot()  {
-    CarPark carpark = carParkService.createCarpark("JUnit", owner, 100);
+  void getNextFreeParkingLot()  {
+    CarPark carpark = carParkService.createCarpark("JUnit_Next", owner, 100);
 
     ParkingLot nextFreeParkingLot = carParkService.getNextFreeParkingLot(carpark, 1);
     assertThat(nextFreeParkingLot.getNumber(), is(1));
   }
 
   @Test
-  public void rentParkingLot() {
-    CarPark carpark = carParkService.createCarpark("JUnit", owner, 100);
+  void rentParkingLot() {
+    CarPark carpark = carParkService.createCarpark("JUnit_Rent", owner, 100);
     ParkingLot nextFreeParkingLot = carParkService.getNextFreeParkingLot(carpark, 1);
     Person rentee = Person.builder().withName("Rentee").build();
     Rental rental = Rental
@@ -72,7 +77,7 @@ public class CarParkServiceTest {
             .build();
     carParkService.rentParkingLot(carpark, rental);
 
-    assertThat(carpark.getRentals(), hasSize(1));
+    assertThat(carpark.getRentalList(), hasSize(1));
 
     ParkingLot nextFreeParkingLotAfterInsert = carParkService.getNextFreeParkingLot(carpark, 1);
     assertThat(nextFreeParkingLotAfterInsert.getNumber(), is(2));
@@ -92,9 +97,9 @@ public class CarParkServiceTest {
   }
 
   @Test
-  public void getAmountOfRentableParkingLots() {
-    String name = "JUnit";
-    carParkService.createCarpark(name, owner, 100);
+  void getAmountOfRentableParkingLots() {
+    String name = "JUnit_Amount";
+    CarPark carpark = carParkService.createCarpark(name, owner, 100);
     int amountOfRentableParkingLots = carParkService.getAmountOfRentableParkingLots(name);
 
     assertThat(amountOfRentableParkingLots, is(100));

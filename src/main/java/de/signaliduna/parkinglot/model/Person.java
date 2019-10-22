@@ -1,17 +1,34 @@
 package de.signaliduna.parkinglot.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author u094915
  */
-public class Person extends Entity {
+@Entity
+@Getter
+@Setter
+@ToString
+public class Person implements Serializable {
 
-  Person() {
-    //
-  }
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
   @NotNull
   @Size(min = 1, max = 30)
@@ -20,36 +37,17 @@ public class Person extends Entity {
   @Size(min = 1, max = 30)
   private String surname;
 
-  @NotNull
   @Valid
-  private Rental rental;
-
-  public Rental getRental() {
-    return rental;
-  }
-
-  public void setRental(Rental rental) {
-    this.rental = rental;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getSurname() {
-    return surname;
-  }
-
-  public void setSurname(String surname) {
-    this.surname = surname;
-  }
+  @OneToMany
+  private List<Rental> rentalList = new ArrayList<>();
 
   public static PersonBuilder builder() {
     return new PersonBuilder();
+  }
+
+  void addRental(Rental rental) {
+    Objects.requireNonNull(rental, "Rental must not be null");
+    rentalList.add(rental);
   }
 
   public static final class PersonBuilder {

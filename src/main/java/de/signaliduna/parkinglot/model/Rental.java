@@ -1,34 +1,39 @@
 package de.signaliduna.parkinglot.model;
 
-import java.util.UUID;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author u094915
  */
-public class Rental extends Entity {
+@Entity
+@Getter
+@Setter
+public class Rental implements Serializable {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
   @NotNull
+  @OneToOne
   private ParkingLot parkingLot;
+
   @NotNull
+  @ManyToOne(cascade = CascadeType.ALL)
   private Person rentee;
-
-  public ParkingLot getParkingLot() {
-    return parkingLot;
-  }
-
-  public Person getRentee() {
-    return rentee;
-  }
-
-  public void setParkingLot(ParkingLot parkingLot) {
-    this.parkingLot = parkingLot;
-  }
-
-  public void setRentee(Person rentee) {
-    this.rentee = rentee;
-  }
 
   public static RentalBuilder builder() {
     return new RentalBuilder();
@@ -52,13 +57,14 @@ public class Rental extends Entity {
     }
 
     public Rental build() {
+      Objects.requireNonNull(rentee, "Cannot create rental without rentee");
+      Objects.requireNonNull(parkingLot, "Cannot create rental without parkinglot");
       Rental rental = new Rental();
       rental.rentee = this.rentee;
-      rental.rentee.setRental(rental);
+      rental.rentee.addRental(rental);
       rental.parkingLot = this.parkingLot;
       rental.parkingLot.setRental(rental);
       return rental;
     }
   }
-
 }

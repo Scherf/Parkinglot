@@ -1,8 +1,9 @@
-package de.signaliduna.parkinglot.web.resources;
+package de.signaliduna.parkinglot.parkinglot.boundary;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import de.signaliduna.parkinglot.model.Rental;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -26,7 +27,7 @@ import de.signaliduna.parkinglot.repository.ParkingLotRepository;
 public class ParkingLotResource {
 
   @Inject
-  private ParkingLotRepository parkingLotRepository;
+   ParkingLotRepository parkingLotRepository;
 
   public ParkingLotResource() {
     //
@@ -48,6 +49,14 @@ public class ParkingLotResource {
   @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
   public List<ParkingLot> getParkingLots() {
+
+    ParkingLot parkingLot = ParkingLot
+                                .builder()
+                                .withLevel(1)
+                                .withNumber(666)
+                                .withRental(new Rental())
+                                .build();
+
     return parkingLotRepository.findAllParkingLots();
   }
 }

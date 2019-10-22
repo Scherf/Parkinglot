@@ -1,14 +1,34 @@
 package de.signaliduna.parkinglot.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serializable;
 
 /**
  * Repräsentiert einen Parkplatz in dem Parkhaus.
  */
-public class ParkingLot extends Entity implements Cloneable {
+@Entity
+@Getter
+@Setter
+@ToString
+public class ParkingLot implements Cloneable, Serializable {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
   @Min(1)
   @Max(9999)
@@ -19,48 +39,11 @@ public class ParkingLot extends Entity implements Cloneable {
   private int level;
 
   @Valid
+  @OneToOne(cascade = CascadeType.ALL)
   private Rental rental;
-
-  ParkingLot() {
-    //
-  }
-
-  public int getNumber() {
-    return number;
-  }
-
-  public int getLevel() {
-    return level;
-  }
-
-  public Rental getRental() {
-    return rental;
-  }
-
-  public void setNumber(int number) {
-    this.number = number;
-  }
-
-  public void setLevel(int level) {
-    this.level = level;
-  }
-
-  public void setRental(Rental rental) {
-    this.rental = rental;
-  }
 
   public static ParkingLotBuilder builder() {
     return new ParkingLotBuilder();
-  }
-
-  @Override
-  public String toString() {
-    return super.toString() + "\n"
-            + "ParkingLot{" +
-            "number=" + number +
-            ", level=" + level +
-            ", rental=" + rental +
-            '}';
   }
 
   public static class ParkingLotBuilder {
@@ -94,7 +77,10 @@ public class ParkingLot extends Entity implements Cloneable {
       ParkingLot parkingLot = new ParkingLot();
       parkingLot.level = this.level;
       parkingLot.number = this.number;
-      parkingLot.rental = this.rental;
+      if (this.rental !=  null) {
+        parkingLot.rental = this.rental;
+        parkingLot.rental.setParkingLot(parkingLot);
+      }
       return parkingLot;
     }
   }

@@ -1,0 +1,12 @@
+FROM postgres:12.0
+
+RUN localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8
+ENV LANG de_DE.utf8
+ENV POSTGRES_USER ranger
+ENV POSTGRES_PASSWORD secret
+ENV POSTGRES_DB parkinglot
+ENV POSTGRES_INITDB_ARGS="--auth-local=password --auth-host=password"
+
+COPY ./src/config/postgresql/init.sql /docker-entrypoint-initdb.d/
+
+# Dont't forget to add port-mapping e.g. -p 5432:5432 when running docker image

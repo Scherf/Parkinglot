@@ -1,4 +1,4 @@
-package de.signaliduna.parkinglot.web.resources;
+package de.signaliduna.parkinglot.parkinglot.boundary;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

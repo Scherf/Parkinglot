@@ -1,27 +1,52 @@
 package de.signaliduna.parkinglot.model;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author U094915
  */
-public class CarParkTest extends AbstractEntityTest {
+class CarParkTest {
 
   private CarPark carPark;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     carPark = new CarPark("JUnit");
   }
 
   @Test
-  public void toStringCoverage() throws Exception {
-    super.checkPropertiesInToStringOutput(carPark);
+  void getFreeParkinglots() {
+    // TODO
   }
 
   @Test
-  public void getFreeParkinglots() {
-    // TODO
+  void calculateAmountOfRentableParkingLots() {
+    carPark.addFloor(Floor.builder().withLevel(1).withCapacity(100).build());
+    carPark.addFloor(Floor.builder().withLevel(2).withCapacity(50).build());
+
+    int amountOfRentableParkingLots = carPark.calculateAmountOfRentableParkingLots();
+
+    assertThat(amountOfRentableParkingLots, is(150));
   }
+
+  @Test
+  void calculateAmountOfRentableParkingLots_with_rental() {
+    carPark.addFloor(Floor.builder().withLevel(1).withCapacity(100).build());
+    carPark.addFloor(Floor.builder().withLevel(2).withCapacity(50).build());
+
+    carPark.addRental(Rental
+                          .builder()
+                          .withRentee(new Person())
+                          .withParkingLot(new ParkingLot())
+                          .build());
+
+    int amountOfRentableParkingLots = carPark.calculateAmountOfRentableParkingLots();
+
+    assertThat(amountOfRentableParkingLots, is(149));
+  }
+
 }

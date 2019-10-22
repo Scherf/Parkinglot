@@ -1,32 +1,27 @@
 package de.signaliduna.parkinglot.validation;
 
+import de.signaliduna.parkinglot.model.ParkingLot;
+import io.quarkus.test.junit.QuarkusTest;
+import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import org.junit.jupiter.api.Test;
+
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-
-import de.signaliduna.parkinglot.model.ParkingLot;
-import de.signaliduna.parkinglot.model.Rental;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
 
 /**
  * @author U094915
  */
-public class ParkingLotValidatorTest {
+@QuarkusTest
+class ParkingLotValidatorTest {
 
+  @Inject
   private ParkingLotValidator validator;
 
-  @Before
-  public void setUp() {
-    validator = new ParkingLotValidator();
-  }
-
   @Test
-  public void validate() {
+  void validate() {
     ParkingLot parkingLot = ParkingLot
             .builder()
             .withLevel(1)
@@ -38,7 +33,7 @@ public class ParkingLotValidatorTest {
   }
 
   @Test
-  public void validate_number_size() {
+  void validate_number_size() {
     ParkingLot parkingLot = ParkingLot
             .builder()
             .withLevel(1)
@@ -49,7 +44,7 @@ public class ParkingLotValidatorTest {
   }
 
   @Test
-  public void jqTest() {
+  void jqTest() {
     // TODO
   }
 }

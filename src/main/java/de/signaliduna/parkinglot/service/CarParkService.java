@@ -1,10 +1,5 @@
 package de.signaliduna.parkinglot.service;
 
-import java.util.Objects;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-
 import de.signaliduna.parkinglot.model.CarPark;
 import de.signaliduna.parkinglot.model.Floor;
 import de.signaliduna.parkinglot.model.ParkingLot;
@@ -13,6 +8,10 @@ import de.signaliduna.parkinglot.model.Rental;
 import de.signaliduna.parkinglot.model.exception.BusinessException;
 import de.signaliduna.parkinglot.model.exception.ErrorCode;
 import de.signaliduna.parkinglot.repository.CarParkRepository;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+
+import java.util.Objects;
 
 /**
  * Verwaltung eines {@link de.signaliduna.parkinglot.model.CarPark}.
@@ -23,13 +22,13 @@ import de.signaliduna.parkinglot.repository.CarParkRepository;
 public class CarParkService {
 
   @Inject
-  private CarParkRepository repository;
+  private CarParkRepository carParkRepository;
 
   public CarParkService() {
     //
   }
 
-  public CarPark createCarpark(String name, Person owner, int... amountOfParkingLotsOnFloor) {
+  CarPark createCarpark(String name, Person owner, int... amountOfParkingLotsOnFloor) {
     CarPark carPark = new CarPark(name);
 
     int level = 1;
@@ -43,11 +42,15 @@ public class CarParkService {
     }
 
     carPark.setOwner(owner);
-    repository.persist(carPark);
-    return carPark;
+    return carParkRepository.persist(carPark);
   }
 
-  public Rental rentParkingLot(CarPark carpark, Person rentee, int level, int parkingLotNumber) {
+  void removeCarpark(String name) {
+    Objects.requireNonNull(name, "Name has to be set.");
+    carParkRepository.remove(name);
+  }
+
+  Rental rentParkingLot(CarPark carpark, Person rentee, int level, int parkingLotNumber) {
     ParkingLot parkingLot = ParkingLot
             .builder()
             .withLevel(level)
@@ -65,10 +68,10 @@ public class CarParkService {
     return rental;
   }
 
-  public ParkingLot getNextFreeParkingLot (CarPark carPark, int level) {
+  ParkingLot getNextFreeParkingLot (CarPark carPark, int level) {
     Floor floor = carPark.getFloor(level);
     long rentalsOnLevel = carPark
-            .getRentals()
+            .getRentalList()
             .stream()
             .filter(rental -> rental.getParkingLot().getLevel() == level)
             .count();
@@ -86,22 +89,21 @@ public class CarParkService {
     return null;
   }
 
-  public void rentParkingLot(CarPark carPark, Rental rental) {
+  void rentParkingLot(CarPark carPark, Rental rental) {
     if (carPark.calculateRental(rental.getParkingLot().getNumber()) != null) {
       throw new BusinessException(ErrorCode.F1000);
     }
     carPark.addRental(rental);
   }
 
-  public int getAmountOfRentableParkingLots(String carParkName) {
-    CarPark carPark = repository.find(carParkName);
+  int getAmountOfRentableParkingLots(String carParkName) {
+    CarPark carPark = carParkRepository.find(carParkName);
     Objects.requireNonNull(carPark, "Carpark with name '"+ carParkName+ "' not found in repository");
-
-    return  carPark.getFloors().stream().map(Floor::getCapacity).reduce(0, Integer::sum);
+    return  carPark.calculateAmountOfRentableParkingLots();
   }
 
   public CarPark findByName(String name) {
-    return repository.find(name);
+    return carParkRepository.find(name);
   }
 
 }
