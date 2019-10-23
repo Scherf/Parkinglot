@@ -13,7 +13,7 @@ jobs:
 
       - run:
           name: Execute build and unit tests
-          command: ./mvnw clean install
+          command: ./mvn clean install
 
 workflows:
   version: 2
