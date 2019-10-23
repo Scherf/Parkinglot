@@ -1,5 +1,6 @@
 package de.signaliduna.parkinglot.model;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,6 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@ToString
 public class Person implements Serializable {
 
   @Id
@@ -39,6 +39,7 @@ public class Person implements Serializable {
 
   @Valid
   @OneToMany
+  @JsonbTransient
   private List<Rental> rentalList = new ArrayList<>();
 
   public static PersonBuilder builder() {

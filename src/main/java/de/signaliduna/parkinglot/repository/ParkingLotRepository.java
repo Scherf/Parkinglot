@@ -37,7 +37,11 @@ public class ParkingLotRepository implements Repository {
   }
 
   @NotNull
-  ParkingLot persist(ParkingLot parkingLot) {
+  public ParkingLot persist(ParkingLot parkingLot) {
     return entityManager.merge(parkingLot);
+  }
+
+  public ParkingLot findById(long id) {
+    return entityManager.find(ParkingLot.class, id);
   }
 }

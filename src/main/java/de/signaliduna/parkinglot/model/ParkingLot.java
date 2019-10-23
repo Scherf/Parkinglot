@@ -24,7 +24,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class ParkingLot implements Cloneable, Serializable {
+public class ParkingLot implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

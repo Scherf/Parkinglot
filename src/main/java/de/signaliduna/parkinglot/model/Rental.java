@@ -1,5 +1,6 @@
 package de.signaliduna.parkinglot.model;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +30,7 @@ public class Rental implements Serializable {
 
   @NotNull
   @OneToOne
+  @JsonbTransient
   private ParkingLot parkingLot;
 
   @NotNull

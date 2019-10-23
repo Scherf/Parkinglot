@@ -54,10 +54,13 @@
         <clover-maven-plugin>4.2.0</clover-maven-plugin>
         <pitest-maven.version>1.2.4</pitest-maven.version>
 
+        <spotbugs.version>4.0.0-beta4</spotbugs.version>
+
         <!-- Reporting -->
         <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
         <maven-surefire-report-plugin.version>2.20.1</maven-surefire-report-plugin.version>
         <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
+        <spotbugs-maven-plugin>3.1.12.2</spotbugs-maven-plugin>
 
         <!-- Runtime -->
         <quarkus.version>0.23.2</quarkus.version>
@@ -220,6 +223,19 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
