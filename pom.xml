@@ -297,35 +297,22 @@
                 </configuration>
             </plugin>
 
-
-            <!-- http://blog.valiantys.com/en/dev-tools-en/implementing-test-coverage-with-atlassian-tools -->
-            <!-- mvn clean clover:setup test clover:aggregate clover:clover -->
+            <!-- https://medium.com/capital-one-tech/improve-java-code-with-unit-tests-and-jacoco-b342643736ed -->
             <plugin>
-                <groupId>org.openclover</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-                <version>${clover-maven-plugin}</version>
-                <configuration>
-                    <!-- TODO -->
-                    <targetPercentage>10%</targetPercentage>
-                    <!-- https://confluence.atlassian.com/clover/using-coverage-contexts-72548355.html -->
-                    <contextFilters>property</contextFilters>
-                </configuration>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
                 <executions>
                     <execution>
-                        <id>clover-check</id>
-                        <phase>verify</phase>
                         <goals>
-                            <!-- create db for check -->
-                            <goal>instrument</goal>
-                            <goal>check</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>clover-report</id>
-                        <phase>pre-site</phase>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
                         <goals>
-                            <!-- create db for check -->
-                            <goal>instrument</goal>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -335,11 +322,17 @@
 
     <reporting>
         <plugins>
-            <!-- Code Coverage -->
             <plugin>
-                <groupId>org.openclover</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-                <version>${clover-maven-plugin}</version>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <!-- select non-aggregate reports -->
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
 
             <!-- Test result -->
