@@ -10,7 +10,7 @@ jobs:
 
       - run:
           name: Execute build and unit tests
-          command: ./mvn clean install
+          command: mvn clean install
 
 workflows:
   version: 2
