@@ -14,15 +14,12 @@ jobs:
       - run:
           name: Execute build and unit tests
           command: ./mvn clean install
+      - save_cache
+        key: parkinglot-{{ checksum "pom.xml" }}
+
 
 workflows:
   version: 2
-
-  main:
+  workflow:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: /.*/
-            tags:
-              only: /.*/
+      - build
