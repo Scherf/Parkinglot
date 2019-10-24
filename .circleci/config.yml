@@ -8,16 +8,9 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          key: parkinglot-{{ checksum "pom.xml" }}
-
       - run:
           name: Execute build and unit tests
           command: ./mvn clean install
-
-      - save_cache:
-          key: parkinglot-{{ checksum "pom.xml" }}
-
 
 workflows:
   version: 2
