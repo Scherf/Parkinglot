@@ -44,7 +44,7 @@
         <javax.el.version>3.0.1-b08</javax.el.version>
         <javers-core.version>5.7.7</javers-core.version>
 
-        <log4j2.version>2.9.0</log4j2.version>
+        <log4j2.version>2.13.3</log4j2.version>
 
         <!-- Test -->
         <junit.version>5.5.2</junit.version>
