@@ -50,7 +50,7 @@
         <junit.version>5.5.2</junit.version>
         <mockito-core.version>3.0.0</mockito-core.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
-        <version.resteasy>4.3.1.Final</version.resteasy>
+        <version.resteasy>4.6.0.Final</version.resteasy>
         <clover-maven-plugin>4.2.0</clover-maven-plugin>
         <pitest-maven.version>1.2.4</pitest-maven.version>
 
